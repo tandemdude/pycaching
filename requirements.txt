@@ -1,0 +1,2 @@
+pysel-lang~=0.0.2
+orjson~=3.8.0
