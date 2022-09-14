@@ -28,14 +28,14 @@ from typing_extensions import TypeAlias
 from cache import abc
 from cache import cacheable
 
-__all__ = ["able", "evict"]
+__all__ = ["enable", "evict"]
 
 T = t.TypeVar("T")
 P = ParamSpec("P")
 CallbackT: TypeAlias = t.Callable[[P], T]
 
 
-def able(
+def enable(
     key: t.Union[str, pysel.Expression[t.Any]],
     at: t.Union[str, pysel.Expression[t.Any]],
     *,

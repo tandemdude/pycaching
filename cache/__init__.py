@@ -40,7 +40,7 @@ __all__ = [
     "Serde",
     "Serializable",
     "abc",
-    "able",
+    "enable",
     "cacheable",
     "decorators",
     "errors",
