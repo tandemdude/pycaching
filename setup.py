@@ -24,7 +24,7 @@ import types
 from setuptools import find_namespace_packages
 from setuptools import setup
 
-name = "pycaching"
+name = "cache"
 
 
 def parse_meta():
