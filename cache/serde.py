@@ -50,7 +50,7 @@ class Serde:
                 "ver": VERSION,
                 "type": "pickle",
             }
-        return {"raw": obj.to_json(), "_cls": self.get_cls_name(obj), "type": "json"}
+        return {"raw": obj.to_json(), "_cls": self.get_cls_name(obj), "ver": VERSION, "type": "json"}
 
     def serialize(self, obj: t.Any) -> bytes:
         return orjson.dumps(obj, default=self.serialize_default)
