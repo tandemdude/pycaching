@@ -48,26 +48,26 @@ class RedisCacheImpl(abc.Cache):
         return self.__async_connection
 
     def put(self, key: str, at: str, value: t.Any, ttl: t.Optional[int]) -> None:
-        self._sync_connection().set(f"pyc:{key}:{at}", serde.serialize(value), ex=ttl)
+        self._sync_connection().set(f"pyc_{self._VERSION}:{key}:{at}", serde.serialize(value), ex=ttl)
 
     async def aput(self, key: str, at: str, value: t.Any, ttl: t.Optional[int]) -> None:
         await (await self._async_connection()).set(f"pyc_{self._VERSION}:{key}:{at}", serde.serialize(value), ex=ttl)
 
     def get(self, key: str, at: str) -> t.Any:
-        value: t.Optional[bytes] = self._sync_connection().get(f"pyc:{key}:{at}")
+        value: t.Optional[bytes] = self._sync_connection().get(f"pyc_{self._VERSION}:{key}:{at}")
         return serde.deserialize(value)
 
     async def aget(self, key: str, at: str) -> t.Any:
-        value: t.Optional[bytes] = await (await self._async_connection()).get(f"pyc:{key}:{at}")
+        value: t.Optional[bytes] = await (await self._async_connection()).get(f"pyc_{self._VERSION}:{key}:{at}")
         return serde.deserialize(value)
 
     def evict(self, key: str, at: t.Optional[str] = None, all: bool = False) -> None:
         conn = self._sync_connection()
         if not all:
-            conn.delete(f"pyc:{key}:{at}")
+            conn.delete(f"pyc_{self._VERSION}:{key}:{at}")
             return
 
-        keys = conn.keys(f"pyc:{key}:*")
+        keys = conn.keys(f"pyc_{self._VERSION}:{key}:*")
         if not keys:
             return
         conn.delete(*keys)
@@ -75,10 +75,10 @@ class RedisCacheImpl(abc.Cache):
     async def aevict(self, key: str, at: str, all: bool = False) -> None:
         conn = await self._async_connection()
         if not all:
-            await conn.delete(f"pyc:{key}:{at}")
+            await conn.delete(f"pyc_{self._VERSION}:{key}:{at}")
             return
 
-        keys = await conn.keys(f"pyc:{key}:*")
+        keys = await conn.keys(f"pyc_{self._VERSION}:{key}:*")
         if not keys:
             return
         await conn.delete(*keys)
